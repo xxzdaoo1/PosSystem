@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="DataModels\" />
-    <Folder Include="Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

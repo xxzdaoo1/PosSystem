@@ -23,7 +23,7 @@
                 
             <!-- Dashboard (Navigation Buttons) -->
             <Button x:Name="Dashboard_Button" Command="{Binding GoDashboardCommand}" Margin="0,0,0,10" Padding="5" 
-                    HorizontalContentAlignment="Left" Click="Button_Click">
+                    HorizontalContentAlignment="Left">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="/Resources/Icons/Dashboard.ico" Width="20" Height="20" Margin="0,0,5,0" />
                     <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
@@ -31,7 +31,7 @@
             </Button>
 
             <Button x:Name="Product_Button" Command="{Binding GoProductCommand}" Margin="0,0,0,10" Padding="5" 
-                    HorizontalContentAlignment="Left" Click="Button_Click">
+                    HorizontalContentAlignment="Left">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="/Resources/Icons/Product.ico" Width="20" Height="20" Margin="0,0,5,0"/>
                     <TextBlock Text="Product" VerticalAlignment="Center"/>
@@ -39,7 +39,7 @@
             </Button>
 
             <Button x:Name="Sell_Button" Command="{Binding GoSellCommand}" Margin="0,0,0,10" Padding="5"
-                    HorizontalContentAlignment="Left" Click="Button_Click">
+                    HorizontalContentAlignment="Left">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="/Resources/Icons/Cashier.ico" Width="20" Height="20" Margin="0,0,5,0"/>
                     <TextBlock Text="Sell" VerticalAlignment="Center"/>
