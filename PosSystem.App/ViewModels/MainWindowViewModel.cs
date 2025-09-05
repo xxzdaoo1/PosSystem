@@ -28,23 +28,31 @@ namespace PosSystem.App.ViewModels
             set { _currentViewModel = value; NotifyPropertyChanged(); }
         }
 
+        // Add navigation commands here
         #region Navigation Commands
         public ICommand GoDashboardCommand => new RelayCommand(GoDashboard);
         public ICommand GoProductCommand => new RelayCommand(GoProduct);
-
+        public ICommand GoSellCommand => new RelayCommand(GoSell);
         private void GoDashboard()
         {
-            var homeVm = new DashboardViewModel(this);
+            var dashboardVm = new DashboardViewModel(this);
             _viewModels.Clear();
-            _viewModels.Push(homeVm);
-            CurrentViewModel = homeVm;
+            _viewModels.Push(dashboardVm);
+            CurrentViewModel = dashboardVm;
         }
-
         private void GoProduct()
         {
-            var anotherVm = new ProductViewModel(this);
-            _viewModels.Push(anotherVm);
-            CurrentViewModel = anotherVm;
+            var productVm = new ProductViewModel(this);
+            _viewModels.Clear();
+            _viewModels.Push(productVm);
+            CurrentViewModel = productVm;
+        }
+        private void GoSell()
+        {
+            var sellVm = new SellViewModel(this);
+            _viewModels.Clear();
+            _viewModels.Push(sellVm);
+            CurrentViewModel = sellVm;
         }
         #endregion
 
