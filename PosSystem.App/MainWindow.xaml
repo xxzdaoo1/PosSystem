@@ -1,0 +1,41 @@
+﻿<Window x:Class="PosSystem.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PosSystem.App"
+        xmlns:ViewModels="clr-namespace:PosSystem.App.ViewModels"
+        mc:Ignorable="d"
+        Title="PoS System" Height="450" Width="800"
+        WindowState="Maximized"
+        >
+    <Window.DataContext>
+        <ViewModels:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" MaxWidth="150" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Main Menu (Navigation Buttons) -->
+            <StackPanel Orientation="Vertical" Grid.Column="0" Margin="10">
+                
+            <Button x:Name="Dashboard_Button" Command="{Binding GoDashboardCommand}" Margin="0,0,0,10" Padding="5">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="/Resources/Icons/Dashboard.ico" Width="20" Height="20" Margin="0,0,5,0"/>
+                    <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="Product_Button" Command="{Binding GoProductCommand}" Margin="0,0,0,10" Padding="5" Click="Button_Click">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="/Resources/Icons/Product.ico" Width="20" Height="20" Margin="0,0,5,0"/>
+                    <TextBlock Text="Product" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+        </StackPanel>
+            <!-- Page View -->
+        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" />
+    </Grid>
+</Window>
