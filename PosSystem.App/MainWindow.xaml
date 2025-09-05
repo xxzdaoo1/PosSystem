@@ -18,35 +18,22 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Main Menu (Navigation Menu) -->
+        <!-- Main Menu (Navigation Buttons) -->
             <StackPanel Orientation="Vertical" Grid.Column="0" Margin="10">
                 
-            <!-- Dashboard (Navigation Buttons) -->
-            <Button x:Name="Dashboard_Button" Command="{Binding GoDashboardCommand}" Margin="0,0,0,10" Padding="5" 
-                    HorizontalContentAlignment="Left" Click="Button_Click">
+            <Button x:Name="Dashboard_Button" Command="{Binding GoDashboardCommand}" Margin="0,0,0,10" Padding="5">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Image Source="/Resources/Icons/Dashboard.ico" Width="20" Height="20" Margin="0,0,5,0" />
+                    <Image Source="/Resources/Icons/Dashboard.ico" Width="20" Height="20" Margin="0,0,5,0"/>
                     <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
 
-            <Button x:Name="Product_Button" Command="{Binding GoProductCommand}" Margin="0,0,0,10" Padding="5" 
-                    HorizontalContentAlignment="Left" Click="Button_Click">
+            <Button x:Name="Product_Button" Command="{Binding GoProductCommand}" Margin="0,0,0,10" Padding="5" Click="Button_Click">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="/Resources/Icons/Product.ico" Width="20" Height="20" Margin="0,0,5,0"/>
                     <TextBlock Text="Product" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-
-            <Button x:Name="Sell_Button" Command="{Binding GoSellCommand}" Margin="0,0,0,10" Padding="5"
-                    HorizontalContentAlignment="Left" Click="Button_Click">
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Image Source="/Resources/Icons/Cashier.ico" Width="20" Height="20" Margin="0,0,5,0"/>
-                    <TextBlock Text="Sell" VerticalAlignment="Center"/>
-                </StackPanel>
-                
-            </Button>
-
         </StackPanel>
             <!-- Page View -->
         <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" />
