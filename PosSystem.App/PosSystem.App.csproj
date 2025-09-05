@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\Cashier.ico" />
     <None Remove="Resources\Icons\Dashboard.ico" />
     <None Remove="Resources\Icons\Product.ico" />
   </ItemGroup>
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\Cashier.ico" />
     <Resource Include="Resources\Icons\Dashboard.ico" />
     <Resource Include="Resources\Icons\Product.ico" />
   </ItemGroup>

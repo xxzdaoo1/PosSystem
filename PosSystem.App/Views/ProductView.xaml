@@ -50,8 +50,11 @@
         <!-- Row 2 (DataGrid) -->
         <Grid Grid.Row="1" Margin="10">
             <Label Content="Product Name:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-            <DataGrid Grid.Column="0" ItemsSource="{Binding ViewBindToModel.Products}"  x:Name="DynamicDataGrid" AutoGenerateColumns="True"
-                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch" IsReadOnly="True" />
+            <DataGrid Grid.Column="0" ItemsSource="{Binding ViewBindToModel.Products}"  x:Name="DynamicDataGrid"
+                      AutoGenerateColumns="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                      IsReadOnly="True" >
+                
+            </DataGrid>
         </Grid>
     </Grid>
 </UserControl>
