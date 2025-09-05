@@ -8,58 +8,58 @@ using System.Windows.Input;
 
 namespace PosSystem.App.Helpers
 {
-    // https://gist.github.com/schuster-rainer/2648922 with some modifications
-    public class RelayCommand<T> : ICommand
+    public class RelayCommand : ICommand
     {
-        #region Fields
+        private readonly Action<object> _executeWithParameter;
+        private readonly Action _executeWithoutParameter;
+        private readonly Func<object, bool> _canExecuteWithParameter;
+        private readonly Func<bool> _canExecuteWithoutParameter;
 
-        readonly Action<T> _execute;
-        readonly Predicate<T> _canExecute;
+        // Constructor for methods WITH parameters (Action<object>)
+        public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
+        {
+            _executeWithParameter = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecuteWithParameter = canExecute;
+        }
 
-        #endregion
+        // Constructor for methods WITHOUT parameters (Action)
+        public RelayCommand(Action execute, Func<bool> canExecute = null)
+        {
+            _executeWithoutParameter = execute ?? throw new ArgumentNullException(nameof(execute));
+            _canExecuteWithoutParameter = canExecute;
+        }
 
-        #region Constructors
-
-        public RelayCommand(Action<T> execute)
-        : this(execute, null)
+        // Constructor for method groups WITH parameters
+        public RelayCommand(Action<object> execute) : this(execute, null)
         {
         }
 
-        public RelayCommand(Action<T> execute, Predicate<T> canExecute)
+        // Constructor for method groups WITHOUT parameters
+        public RelayCommand(Action execute) : this(execute, null)
         {
-            if (execute == null)
-                throw new ArgumentNullException("Execute parameter cannot be null");
-            _execute = execute;
-            _canExecute = canExecute;
         }
 
-        #endregion
-
-        #region ICommand Members
-
-        [DebuggerStepThrough]
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null ? true : _canExecute((T)parameter);
+            if (_canExecuteWithParameter != null)
+                return _canExecuteWithParameter(parameter);
+            if (_canExecuteWithoutParameter != null)
+                return _canExecuteWithoutParameter();
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            if (_executeWithParameter != null)
+                _executeWithParameter(parameter);
+            else
+                _executeWithoutParameter?.Invoke();
         }
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
+            add => CommandManager.RequerySuggested += value;
+            remove => CommandManager.RequerySuggested -= value;
         }
-
-        public void Execute(object parameter) => _execute((T)parameter);
-
-        #endregion
-    }
-
-    public class RelayCommand : RelayCommand<object>
-    {
-        public RelayCommand(Action execute) : this(execute, null) { }
-        public RelayCommand(Action execute, Func<bool> canExecute)
-            : base(param => execute?.Invoke(),
-                   param => (canExecute?.Invoke()) ?? true)
-        { }
     }
 }

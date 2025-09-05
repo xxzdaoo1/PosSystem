@@ -1,5 +1,6 @@
 ﻿using PosSystem.App.Helpers;
 using PosSystem.App.Interfaces;
+using PosSystem.App.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,11 +29,12 @@ namespace PosSystem.App.ViewModels
             set { _currentViewModel = value; NotifyPropertyChanged(); }
         }
 
-        // Add navigation commands here
+        // Add page navigation command here
         #region Navigation Commands
         public ICommand GoDashboardCommand => new RelayCommand(GoDashboard);
         public ICommand GoProductCommand => new RelayCommand(GoProduct);
         public ICommand GoSellCommand => new RelayCommand(GoSell);
+
         private void GoDashboard()
         {
             var dashboardVm = new DashboardViewModel(this);
@@ -56,7 +58,7 @@ namespace PosSystem.App.ViewModels
         }
         #endregion
 
-        #region IChangeViewModel
+            #region IChangeViewModel
 
         public void PushViewModel(BaseViewModel model)
         {
