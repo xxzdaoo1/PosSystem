@@ -1,0 +1,49 @@
+﻿<Window x:Class="PosSystem.App.Views.EditProductWindowView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PosSystem.App.Views"
+        mc:Ignorable="d"
+        Title="EditProductWindowView" Height="450" Width="400">
+    
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Barcode -->
+        <TextBlock Text="Barcode:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Barcode}" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
+
+        <!-- Name -->
+        <TextBlock Text="Product Name:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Name}" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
+
+        <!-- Price -->
+        <TextBlock Text="Price:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding Price}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
+
+        <!-- Stock Quantity -->
+        <TextBlock Text="Stock Quantity:" Grid.Row="3" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding StockQuantity}" Grid.Row="3" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
+
+        <!-- Buttons -->
+        <StackPanel Grid.Row="6" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Save" Command="{Binding SaveEditProductCommand}" Width="80" 
+                    Margin="0,0,10,0" Height="30"/>
+            <Button Content="Close" Command="{Binding CloseEditProductCommand}" Width="80" 
+                    Height="30" />
+        </StackPanel>
+    </Grid>
+</Window>
