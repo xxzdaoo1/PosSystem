@@ -29,7 +29,8 @@
                     <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
-
+            
+            <!-- Product (Navigation Buttons) -->
             <Button x:Name="Product_Button" Command="{Binding GoProductCommand}" Margin="0,0,0,10" Padding="5" 
                     HorizontalContentAlignment="Left">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -38,17 +39,28 @@
                 </StackPanel>
             </Button>
 
-            <Button x:Name="Sell_Button" Command="{Binding GoSellCommand}" Margin="0,0,0,10" Padding="5"
+            <!-- Sales (Navigation Buttons) -->
+            <Button x:Name="Sales_Button" Command="{Binding GoSalesCommand}" Margin="0,0,0,10" Padding="5"
                     HorizontalContentAlignment="Left">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Image Source="/Resources/Icons/Cashier.ico" Width="20" Height="20" Margin="0,0,5,0"/>
-                    <TextBlock Text="Sell" VerticalAlignment="Center"/>
+                    <TextBlock Text="Sales" VerticalAlignment="Center"/>
                 </StackPanel>
-                
+            </Button>
+
+            <!-- Inventory (Navigation Buttons) -->
+            <Button x:Name="Inventory_Button" Command="{Binding GoInventoryCommand}" Margin="0,0,0,10" Padding="5"
+                    HorizontalContentAlignment="Left">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Source="/Resources/Icons/Cashier.ico" Width="20" Height="20" Margin="0,0,5,0"/>
+                    <TextBlock Text="Inventory" VerticalAlignment="Center"/>
+                </StackPanel>
             </Button>
 
         </StackPanel>
-            <!-- Page View -->
+                
+        <!-- Page View -->
         <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" />
+        
     </Grid>
 </Window>

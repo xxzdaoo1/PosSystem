@@ -33,7 +33,8 @@ namespace PosSystem.App.ViewModels
         #region Navigation Commands
         public ICommand GoDashboardCommand => new RelayCommand(GoDashboard);
         public ICommand GoProductCommand => new RelayCommand(GoProduct);
-        public ICommand GoSellCommand => new RelayCommand(GoSell);
+        public ICommand GoSalesCommand => new RelayCommand(GoSales);
+        public ICommand GoInventoryCommand => new RelayCommand(GoInventory);
 
         private void GoDashboard()
         {
@@ -49,16 +50,23 @@ namespace PosSystem.App.ViewModels
             _viewModels.Push(productVm);
             CurrentViewModel = productVm;
         }
-        private void GoSell()
+        private void GoSales()
         {
-            var sellVm = new SellViewModel(this);
+            var salesVm = new SalesViewModel(this);
             _viewModels.Clear();
-            _viewModels.Push(sellVm);
-            CurrentViewModel = sellVm;
+            _viewModels.Push(salesVm);
+            CurrentViewModel = salesVm;
+        }
+        private void GoInventory()
+        {
+            var inventoryVm = new InventoryViewModel(this);
+            _viewModels.Clear();
+            _viewModels.Push(inventoryVm);
+            CurrentViewModel = inventoryVm;
         }
         #endregion
 
-            #region IChangeViewModel
+        #region IChangeViewModel
 
         public void PushViewModel(BaseViewModel model)
         {

@@ -4,9 +4,42 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Add New Product" Height="450" Width="400"
+        Title="Add Product" Height="450" Width="400"
         WindowStartupLocation="CenterOwner">
 
+    <Window.Resources>
+        <!-- Style PlaceHolder Textbox -->
+        <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <TextBox Text="{Binding Path=Text,
+                                                RelativeSource={RelativeSource TemplatedParent}, 
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="textSource" 
+                                 Background="Transparent" 
+                                 Panel.ZIndex="2" />
+                            <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                                <Setter Property="Foreground" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
     <Grid Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,11 +57,13 @@
 
         <!-- Barcode -->
         <TextBlock Text="Barcode:" Grid.Row="0" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding Barcode}" Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
+        <TextBox Text="{Binding Barcode}" Style="{StaticResource placeHolder}" Tag="Enter product barcode" 
+                 Grid.Row="0" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
 
         <!-- Name -->
         <TextBlock Text="Product Name:" Grid.Row="1" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>
-        <TextBox Text="{Binding Name}" Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
+        <TextBox Text="{Binding Name}" Style="{StaticResource placeHolder}" Tag="Enter product name" 
+                 Grid.Row="1" Grid.Column="1" Margin="0,0,0,10" Height="25"/>
 
         <!-- Price -->
         <TextBlock Text="Price:" Grid.Row="2" Grid.Column="0" Margin="0,0,10,10" VerticalAlignment="Center"/>

@@ -15,8 +15,12 @@
             <Views:ProductView/>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type ViewModels:SellViewModel}">
-            <Views:SellView/>
+        <DataTemplate DataType="{x:Type ViewModels:SalesViewModel}">
+            <Views:SalesView/>
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type ViewModels:InventoryViewModel}">
+            <Views:InventoryView/>
         </DataTemplate>
 
     </Application.Resources>

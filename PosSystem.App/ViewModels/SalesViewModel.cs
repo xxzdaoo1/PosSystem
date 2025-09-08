@@ -7,9 +7,9 @@ using PosSystem.App.Interfaces;
 
 namespace PosSystem.App.ViewModels
 {
-    class SellViewModel : BaseViewModel
+    class SalesViewModel : BaseViewModel
     {
-        public SellViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
+        public SalesViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
         {
         }
     }

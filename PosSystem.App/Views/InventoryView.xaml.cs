@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace PosSystem.App.Views
 {
     /// <summary>
-    /// Interaction logic for SellView.xaml
+    /// Interaction logic for Inventory.xaml
     /// </summary>
-    public partial class SellView : UserControl
+    public partial class InventoryView : UserControl
     {
-        public SellView()
+        public InventoryView()
         {
             InitializeComponent();
         }

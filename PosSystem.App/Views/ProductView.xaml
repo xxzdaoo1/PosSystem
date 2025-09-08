@@ -5,11 +5,76 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PosSystem.App.Views" 
              xmlns:viewmodels="clr-namespace:PosSystem.App.ViewModels" 
+             xmlns:helpers="clr-namespace:PosSystem.App.Helpers"
              d:DataContext="{d:DesignInstance Type=viewmodels:ProductViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
+        <helpers:RowNumberConverter x:Key="RowNumberConverter"/>
+
+        <!-- Triangle Icons for Sort Indicators -->
+        <Geometry x:Key="UpArrow">M 0,6 L 6,0 L 12,6 Z</Geometry>
+        <Geometry x:Key="DownArrow">M 0,0 L 6,6 L 12,0 Z</Geometry>
+
+        <!-- Style DataGrid Column Header -->
+        <Style TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="DarkGray" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DataGridColumnHeader">
+                        <Grid>
+                            <Border Background="{TemplateBinding Background}" 
+                                    BorderBrush="{TemplateBinding BorderBrush}" 
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  Margin="{TemplateBinding Padding}"
+                                                  RecognizesAccessKey="True"/>
+                            </Border>
+
+                            <!-- Sort Indicator -->
+                            <Path x:Name="SortIcon" 
+                                  Data="{StaticResource UpArrow}" 
+                                  Fill="White" 
+                                  Stretch="Uniform"
+                                  Width="8" 
+                                  Height="8"
+                                  HorizontalAlignment="Right"
+                                  VerticalAlignment="Center"
+                                  Margin="0,0,5,0"
+                                  Visibility="Collapsed"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Ascending Sort Indicator -->
+                            <Trigger Property="SortDirection" Value="Ascending">
+                                <Setter TargetName="SortIcon" Property="Data" Value="{StaticResource UpArrow}"/>
+                                <Setter TargetName="SortIcon" Property="Visibility" Value="Visible"/>
+                                <Setter Property="Background" Value="#FF505050"/>
+                            </Trigger>
+
+                            <!-- Descending Sort Indicator -->
+                            <Trigger Property="SortDirection" Value="Descending">
+                                <Setter TargetName="SortIcon" Property="Data" Value="{StaticResource DownArrow}"/>
+                                <Setter TargetName="SortIcon" Property="Visibility" Value="Visible"/>
+                                <Setter Property="Background" Value="#FF404040"/>
+                            </Trigger>
+
+                            <!-- Hover Effect -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF606060"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Style DataGrid -->
         <Style TargetType="DataGrid">
             <Setter Property="Background" Value="LightGray" />
@@ -19,14 +84,7 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="HorizontalGridLinesBrush" Value="Gray" />
             <Setter Property="VerticalGridLinesBrush" Value="Gray" />
-        </Style>
-
-        <!-- Style DataGrid Header -->
-        <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="DarkGray" />
-            <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="CanUserSortColumns" Value="True"/>
         </Style>
 
         <!-- Style DataGrid Row -->
@@ -40,10 +98,43 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        
+        <!-- Style PlaceHolder Textbox -->
+        <Style x:Key="placeHolder" TargetType="{x:Type TextBox}" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <TextBox Text="{Binding Path=Text,
+                                                RelativeSource={RelativeSource TemplatedParent}, 
+                                                Mode=TwoWay,
+                                                UpdateSourceTrigger=PropertyChanged}"
+                                 x:Name="textSource" 
+                                 Background="Transparent" 
+                                 Panel.ZIndex="2" />
+                            <TextBox Text="{TemplateBinding Tag}" Background="{TemplateBinding Background}" Panel.ZIndex="1">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Setter Property="Foreground" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=Text, Source={x:Reference textSource}}" Value="">
+                                                <Setter Property="Foreground" Value="LightGray"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
+        
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
@@ -52,21 +143,53 @@
         <!-- Title -->
         <Label Grid.Row="0" Content="Product Management" HorizontalAlignment="Center" 
                FontSize="24" FontWeight="Bold" Margin="0,10,0,10" />
-
+        
+        <!-- Search -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0,10,10">
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                     Style="{StaticResource placeHolder}" Tag="Enter product name" 
+                     Width="200" Height="25" Margin="0,0,10,0"/>
+            <Button Content="Search" Command="{Binding SearchProductCommand}" 
+                    Width="80" Height="25" Margin="0,0,10,0"/>
+            <Button Content="Clear" Command="{Binding RefreshProductCommand}" 
+                    Width="80" Height="25"/>
+        </StackPanel>
+        
         <!-- DataGrid -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding ViewBindToModel.Products}" 
-                  AutoGenerateColumns="True" 
+        <DataGrid Grid.Row="2" ItemsSource="{Binding ViewBindToModel.LimitedProducts}"
+                  HeadersVisibility="Column"
+                  AutoGenerateColumns="False"
                   IsReadOnly="True"
                   Margin="10"
                   HorizontalAlignment="Stretch"
                   VerticalAlignment="Stretch"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
-                  SelectedItem="{Binding ViewBindToModel.SelectedProduct}">
+                  SelectedItem="{Binding ViewBindToModel.SelectedProduct}"
+                  EnableRowVirtualization="False"
+                  CanUserSortColumns="True"
+                  CanUserResizeRows="False"
+                  CanUserResizeColumns="False">
+
+            <DataGrid.Columns>
+                <!-- Sequence Number Column -->
+                <DataGridTextColumn Header="#" Width="40" IsReadOnly="True" CanUserSort="False">
+                    <DataGridTextColumn.Binding>
+                        <Binding RelativeSource="{RelativeSource AncestorType=DataGridRow}" 
+                                 Converter="{StaticResource RowNumberConverter}"/>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+
+                <!-- Product Attribute Columns -->
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*" CanUserSort="True"/>
+                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="120" CanUserSort="True"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat=C}" Width="80" CanUserSort="True"/>
+                <DataGridTextColumn Header="Stock" Binding="{Binding StockQuantity}" Width="60" CanUserSort="True"/>
+            </DataGrid.Columns>
         </DataGrid>
 
         <!-- Action Buttons -->
-        <Grid Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,10">
+        <Grid Grid.Row="3" HorizontalAlignment="Center" Margin="0,10,0,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>

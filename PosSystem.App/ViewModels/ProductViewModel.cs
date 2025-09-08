@@ -24,6 +24,18 @@ namespace PosSystem.App.ViewModels
         public ICommand EditProductCommand { get; set; }
         public ICommand DeleteProductCommand { get; set; }
         public ICommand RefreshProductCommand { get; set; }
+        public ICommand SearchProductCommand { get; set; }
+
+        private string _searchText;
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                NotifyPropertyChanged();
+            }
+        }
 
         public ProductViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
         {
@@ -32,6 +44,7 @@ namespace PosSystem.App.ViewModels
             EditProductCommand = new RelayCommand(EditProduct);
             DeleteProductCommand = new RelayCommand(DeleteProduct);
             RefreshProductCommand = new RelayCommand(RefreshProducts);
+            SearchProductCommand = new RelayCommand(SearchProducts);
         }
 
         private void OpenAddProductWindow(object parameter)
@@ -105,16 +118,36 @@ namespace PosSystem.App.ViewModels
         {
             ViewBindToModel.LoadProductsFromDatabase();
         }
+        private void SearchProducts(object parameter)
+        {
+            ViewBindToModel.SearchProducts(SearchText);
+        }
     }
     public class ViewBindToModel : ChangeNotifier
-    {   
-        private ObservableCollection<Product> _products;
-        public ObservableCollection<Product> Products
-        {
-            get => _products;
-            set { _products = value; NotifyPropertyChanged(); }
-        }
+    {
+        private ObservableCollection<Product> _allProducts;
+        private ObservableCollection<Product> _limitedProducts;
+        private ObservableCollection<Product> _filteredProducts;
         private Product _selectedProduct;
+
+        public ObservableCollection<Product> AllProducts
+        {
+            get => _allProducts;
+            set { _allProducts = value; NotifyPropertyChanged(); }
+        }
+
+        public ObservableCollection<Product> LimitedProducts
+        {
+            get => _limitedProducts;
+            set { _limitedProducts = value; NotifyPropertyChanged(); }
+        }
+
+        public ObservableCollection<Product> FilteredProducts
+        {
+            get => _filteredProducts;
+            set { _filteredProducts = value; NotifyPropertyChanged(); }
+        }
+
         public Product SelectedProduct
         {
             get => _selectedProduct;
@@ -122,6 +155,7 @@ namespace PosSystem.App.ViewModels
             {
                 _selectedProduct = value;
                 NotifyPropertyChanged();
+                Debug.WriteLine($"SelectedProduct set to: {value?.Name ?? "null"}");
             }
         }
 
@@ -129,14 +163,60 @@ namespace PosSystem.App.ViewModels
         {
             LoadProductsFromDatabase();
         }
+
         public void LoadProductsFromDatabase()
         {
             using (var context = new AppDBContext())
             {
-                Products = new ObservableCollection<Product>(context.Products.ToList());
+                AllProducts = new ObservableCollection<Product>(context.Products.ToList());
+                LimitedProducts = new ObservableCollection<Product>(AllProducts.Take(20));
+                FilteredProducts = new ObservableCollection<Product>(AllProducts);
             }
         }
 
+        public void DeleteProduct(Product product)
+        {
+            if (product == null) return;
+
+            try
+            {
+                using (var context = new AppDBContext())
+                {
+                    context.Products.Attach(product);
+                    context.Products.Remove(product);
+                    context.SaveChanges();
+                }
+                if (FilteredProducts?.Contains(product) == true)
+                    FilteredProducts.Remove(product);
+
+                if (LimitedProducts?.Contains(product) == true)
+                    LimitedProducts.Remove(product);
+
+                SelectedProduct = null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error deleting product: {ex.Message}", "Error",
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        public void SearchProducts(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+            {
+                LimitedProducts = new ObservableCollection<Product>(AllProducts.Take(20));
+                FilteredProducts = new ObservableCollection<Product>(AllProducts);
+                return;
+            }
+            else
+            {
+                var filtered = AllProducts.Where(p => p.Name != null && p.Name.Contains(
+                    searchText, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                FilteredProducts = new ObservableCollection<Product>(filtered);
+                LimitedProducts = new ObservableCollection<Product>(filtered.Take(20));
+            }
+        }
     }
 
 }

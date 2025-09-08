@@ -48,6 +48,12 @@ namespace PosSystem.App.ViewModels
         public EditProductWindowViewModel(Product product)
         {
             Product = product;
+
+            Barcode = product.Barcode;
+            Name = product.Name;
+            Price = product.Price;
+            StockQuantity = product.StockQuantity;
+
             SaveEditProductCommand = new RelayCommand(SaveEdit);
             CloseEditProductCommand = new RelayCommand(CloseWindow);
         }
