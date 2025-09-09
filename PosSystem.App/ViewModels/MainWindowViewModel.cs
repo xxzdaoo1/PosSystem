@@ -67,7 +67,6 @@ namespace PosSystem.App.ViewModels
         #endregion
 
         #region IChangeViewModel
-
         public void PushViewModel(BaseViewModel model)
         {
             _viewModels.Push(model);
@@ -82,7 +81,6 @@ namespace PosSystem.App.ViewModels
                 CurrentViewModel = _viewModels.Peek();
             }
         }
-
         #endregion
     }
 }

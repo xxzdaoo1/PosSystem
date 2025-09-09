@@ -11,6 +11,7 @@ namespace PosSystem.App.ViewModels
     {
         public InventoryViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
         {
+
         }
     }
 }

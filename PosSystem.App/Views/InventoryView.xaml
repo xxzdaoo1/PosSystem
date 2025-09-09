@@ -5,46 +5,88 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <TextBlock Text="Inventory Management" FontSize="20" FontWeight="Bold"/>
-            <Separator Width="400" Background="Transparent"/>
-            <Button Content="Receive Stock" Command="{Binding ShowReceiveStockCommand}" 
-                    Margin="10,0,0,0" Width="120" Height="30"/>
+        <TextBlock Grid.Row="0" Text="Inventory Management" 
+                   FontSize="24" FontWeight="Bold" Margin="0,0,0,10"/>
+
+        <!-- Quick Stats -->
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
+            <Border Background="LightGreen" Margin="5" Padding="10" CornerRadius="5">
+                <StackPanel>
+                    <TextBlock Text="In Stock" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding InStockProducts}" FontSize="16"/>
+                </StackPanel>
+            </Border>
+            <Border Background="LightCoral" Margin="5" Padding="10" CornerRadius="5">
+                <StackPanel>
+                    <TextBlock Text="Low Stock" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding LowStockProducts}" FontSize="16"/>
+                </StackPanel>
+            </Border>
+            <Border Background="LightGray" Margin="5" Padding="10" CornerRadius="5">
+                <StackPanel>
+                    <TextBlock Text="Out of Stock" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding OutOfStockProducts}" FontSize="16"/>
+                </StackPanel>
+            </Border>
         </StackPanel>
 
-        <!-- Inventory List -->
-        <DataGrid Grid.Row="1" ItemsSource="{Binding Products}" AutoGenerateColumns="False" 
-                  Margin="0,10" IsReadOnly="True">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Product" Binding="{Binding Name}" Width="*"/>
-                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="120"/>
-                <DataGridTextColumn Header="Current Stock" Binding="{Binding StockQuantity}" Width="100"/>
-                <DataGridTextColumn Header="Low Stock" Binding="{Binding LowStockThreshold}" Width="100"/>
-                <DataGridTextColumn Header="Status" Binding="{Binding StockStatus}" Width="100"/>
-                <DataGridTextColumn Header="Last Received" Binding="{Binding LastStockUpdate, StringFormat=yyyy-MM-dd}" Width="120"/>
-            </DataGrid.Columns>
-        </DataGrid>
+        <!-- Inventory List with Search in GroupBox -->
+        <GroupBox Grid.Row="2" Header="Inventory">
+            <DockPanel>
+                <!-- Search Box -->
+                <TextBox DockPanel.Dock="Top" HorizontalAlignment="Left" 
+                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+                         Width="250" Height="25" Margin="5"/>
 
-        <!-- Stock History -->
-        <GroupBox Grid.Row="2" Header="Stock Receiving History">
-            <DataGrid ItemsSource="{Binding StockHistory}" AutoGenerateColumns="False" Height="200">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Date" Binding="{Binding ReceiveDate, StringFormat=yyyy-MM-dd}" Width="100"/>
-                    <DataGridTextColumn Header="Product" Binding="{Binding Product.Name}" Width="*"/>
-                    <DataGridTextColumn Header="Quantity" Binding="{Binding QuantityReceived}" Width="80"/>
-                    <DataGridTextColumn Header="Supplier" Binding="{Binding SupplierName}" Width="150"/>
-                    <DataGridTextColumn Header="Cost" Binding="{Binding UnitCost, StringFormat=C}" Width="80"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                <!-- Tabs -->
+                <TabControl>
+                    <!-- All Inventory Tab -->
+                    <TabItem Header="All Inventory">
+                        <DataGrid ItemsSource="{Binding FilteredInventoryItems}" AutoGenerateColumns="False" Margin="5">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Product" Binding="{Binding Name}" Width="*"/>
+                                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="100"/>
+                                <DataGridTextColumn Header="Current Stock" Binding="{Binding StockQuantity}" Width="80"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding StockStatus}" Width="100"/>
+                                <DataGridTextColumn Header="Last Updated" Binding="{Binding LastStockUpdate, StringFormat=yyyy-MM-dd}" Width="100"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+
+                    <!-- Stock History Tab -->
+                    <TabItem Header="Stock History">
+                        <DataGrid ItemsSource="{Binding StockHistory}" AutoGenerateColumns="False" Margin="5">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Date" Binding="{Binding AdjustmentDate, StringFormat=yyyy-MM-dd}" Width="100"/>
+                                <DataGridTextColumn Header="Product" Binding="{Binding Product.Name}" Width="*"/>
+                                <DataGridTextColumn Header="Type" Binding="{Binding AdjustmentType}" Width="80"/>
+                                <DataGridTextColumn Header="Qty Change" Binding="{Binding QuantityChange}" Width="80"/>
+                                <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier}" Width="120"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </TabItem>
+                </TabControl>
+            </DockPanel>
         </GroupBox>
+
+        <!-- Action Buttons -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
+            <Button Content="Receive Stock" Command="{Binding ReceiveStockCommand}" 
+                    Width="120" Height="35" Margin="5"/>
+            <Button Content="Adjust Stock" Command="{Binding AdjustStockCommand}" 
+                    Width="120" Height="35" Margin="5"/>
+            <Button Content="Generate Report" Command="{Binding GenerateReportCommand}" 
+                    Width="120" Height="35" Margin="5"/>
+        </StackPanel>
     </Grid>
 </UserControl>

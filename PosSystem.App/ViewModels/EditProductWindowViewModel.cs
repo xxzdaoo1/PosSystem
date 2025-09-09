@@ -44,8 +44,8 @@ namespace PosSystem.App.ViewModels
         public ICommand SaveEditProductCommand { get; set; }
         public ICommand CloseEditProductCommand { get; set; }
         public Action CloseAction { get; set; }
-        public Product Product { get; set; }
-        public EditProductWindowViewModel(Product product)
+        public ProductModel Product { get; set; }
+        public EditProductWindowViewModel(ProductModel product)
         {
             Product = product;
 

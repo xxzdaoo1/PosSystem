@@ -23,6 +23,7 @@ namespace PosSystem.App.Views
         public SalesView()
         {
             InitializeComponent();
+            DataContext = new ViewModels.SalesViewModel(null);
         }
     }
 }

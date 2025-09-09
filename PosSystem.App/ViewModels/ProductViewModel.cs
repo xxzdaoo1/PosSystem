@@ -19,7 +19,7 @@ namespace PosSystem.App.ViewModels
 {
     class ProductViewModel : BaseViewModel
     {
-        public ViewBindToModel ViewBindToModel { get; set; }
+        public ViewBindToProductModel ViewBindToProductModel { get; set; }
         public ICommand AddProductCommand { get; set; }
         public ICommand EditProductCommand { get; set; }
         public ICommand DeleteProductCommand { get; set; }
@@ -34,19 +34,19 @@ namespace PosSystem.App.ViewModels
             {
                 _searchText = value;
                 NotifyPropertyChanged();
+                ViewBindToProductModel.SearchProducts(value);
             }
         }
 
         public ProductViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
         {
-            ViewBindToModel = new ViewBindToModel();
+            ViewBindToProductModel = new ViewBindToProductModel();
             AddProductCommand = new RelayCommand(OpenAddProductWindow);
             EditProductCommand = new RelayCommand(EditProduct);
             DeleteProductCommand = new RelayCommand(DeleteProduct);
             RefreshProductCommand = new RelayCommand(RefreshProducts);
-            SearchProductCommand = new RelayCommand(SearchProducts);
         }
-
+        #region Command Methods
         private void OpenAddProductWindow(object parameter)
         {
             var addProductWindow = new AddProductWindowView()
@@ -66,7 +66,7 @@ namespace PosSystem.App.ViewModels
         }
         private void EditProduct(object parameter)
         {
-            Product productToEdit = parameter as Product ?? ViewBindToModel.SelectedProduct;
+            ProductModel productToEdit = parameter as ProductModel ?? ViewBindToProductModel.SelectedProduct;
             if (productToEdit != null)
             {
                 var editProductWindow = new EditProductWindowView()
@@ -92,7 +92,7 @@ namespace PosSystem.App.ViewModels
         private void DeleteProduct(object parameter)
         {
 
-            Product productToDelete = parameter as Product ?? ViewBindToModel.SelectedProduct;
+            ProductModel productToDelete = parameter as ProductModel ?? ViewBindToProductModel.SelectedProduct;
 
             if (productToDelete == null)
             {
@@ -116,65 +116,56 @@ namespace PosSystem.App.ViewModels
         }
         private void RefreshProducts(object parameter)
         {
-            ViewBindToModel.LoadProductsFromDatabase();
+            ViewBindToProductModel.LoadProductsFromDatabase();
         }
-        private void SearchProducts(object parameter)
-        {
-            ViewBindToModel.SearchProducts(SearchText);
-        }
+        #endregion
     }
-    public class ViewBindToModel : ChangeNotifier
+    public class ViewBindToProductModel : ChangeNotifier
     {
-        private ObservableCollection<Product> _allProducts;
-        private ObservableCollection<Product> _limitedProducts;
-        private ObservableCollection<Product> _filteredProducts;
-        private Product _selectedProduct;
-
-        public ObservableCollection<Product> AllProducts
+        private ObservableCollection<ProductModel> _allProducts;
+        private ObservableCollection<ProductModel> _limitedProducts;
+        private ObservableCollection<ProductModel> _filteredProducts;
+        private ProductModel _selectedProduct;
+        public ObservableCollection<ProductModel> AllProducts
         {
             get => _allProducts;
             set { _allProducts = value; NotifyPropertyChanged(); }
         }
-
-        public ObservableCollection<Product> LimitedProducts
+        public ObservableCollection<ProductModel> LimitedProducts
         {
             get => _limitedProducts;
             set { _limitedProducts = value; NotifyPropertyChanged(); }
         }
-
-        public ObservableCollection<Product> FilteredProducts
+        public ObservableCollection<ProductModel> FilteredProducts
         {
             get => _filteredProducts;
             set { _filteredProducts = value; NotifyPropertyChanged(); }
         }
-
-        public Product SelectedProduct
+        public ProductModel SelectedProduct
         {
             get => _selectedProduct;
             set
             {
                 _selectedProduct = value;
                 NotifyPropertyChanged();
-                Debug.WriteLine($"SelectedProduct set to: {value?.Name ?? "null"}");
             }
         }
 
-        public ViewBindToModel()
+        public ViewBindToProductModel()
         {
             LoadProductsFromDatabase();
         }
-
         public void LoadProductsFromDatabase()
         {
             using (var context = new AppDBContext())
             {
-                AllProducts = new ObservableCollection<Product>(context.Products.ToList());
-                LimitedProducts = new ObservableCollection<Product>(AllProducts.Take(20));
-                FilteredProducts = new ObservableCollection<Product>(AllProducts);
+                AllProducts = new ObservableCollection<ProductModel>(context.Products.ToList());
+                LimitedProducts = new ObservableCollection<ProductModel>(AllProducts.Take(20));
+                FilteredProducts = new ObservableCollection<ProductModel>(AllProducts);
             }
         }
 
-        public void DeleteProduct(Product product)
+        public void DeleteProduct(ProductModel product)
         {
             if (product == null) return;
 
@@ -204,18 +195,18 @@ namespace PosSystem.App.ViewModels
         {
             if (string.IsNullOrWhiteSpace(searchText))
             {
-                LimitedProducts = new ObservableCollection<Product>(AllProducts.Take(20));
-                FilteredProducts = new ObservableCollection<Product>(AllProducts);
+                LimitedProducts = new ObservableCollection<ProductModel>(AllProducts.Take(20));
+                FilteredProducts = new ObservableCollection<ProductModel>(AllProducts);
                 return;
             }
-            else
-            {
-                var filtered = AllProducts.Where(p => p.Name != null && p.Name.Contains(
-                    searchText, StringComparison.OrdinalIgnoreCase)).ToList();
 
-                FilteredProducts = new ObservableCollection<Product>(filtered);
-                LimitedProducts = new ObservableCollection<Product>(filtered.Take(20));
-            }
+            var filtered = AllProducts
+                .Where(p => (p.Name != null && p.Name.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                           (p.Barcode != null && p.Barcode.IndexOf(searchText, StringComparison.OrdinalIgnoreCase) >= 0))
+                .ToList();
+
+            FilteredProducts = new ObservableCollection<ProductModel>(filtered);
+            LimitedProducts = new ObservableCollection<ProductModel>(filtered.Take(20));
         }
     }
 

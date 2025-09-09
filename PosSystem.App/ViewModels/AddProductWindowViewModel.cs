@@ -62,7 +62,7 @@ namespace PosSystem.App.ViewModels
             {
                 using (var context = new AppDBContext())
                 {
-                    var product = new Product
+                    var product = new ProductModel
                     {
                         Barcode = Barcode,
                         Name = Name,

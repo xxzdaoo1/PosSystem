@@ -145,18 +145,14 @@
                FontSize="24" FontWeight="Bold" Margin="0,10,0,10" />
         
         <!-- Search -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="10,0,10,10">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,10,10">
             <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
-                     Style="{StaticResource placeHolder}" Tag="Enter product name" 
-                     Width="200" Height="25" Margin="0,0,10,0"/>
-            <Button Content="Search" Command="{Binding SearchProductCommand}" 
-                    Width="80" Height="25" Margin="0,0,10,0"/>
-            <Button Content="Clear" Command="{Binding RefreshProductCommand}" 
-                    Width="80" Height="25"/>
+                     Style="{StaticResource placeHolder}" Tag="Enter product name or barcode" 
+                     Width="250" Height="25" Margin="0,0,10,0"/>
         </StackPanel>
         
         <!-- DataGrid -->
-        <DataGrid Grid.Row="2" ItemsSource="{Binding ViewBindToModel.LimitedProducts}"
+        <DataGrid Grid.Row="2" ItemsSource="{Binding ViewBindToProductModel.LimitedProducts}"
                   HeadersVisibility="Column"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
@@ -165,7 +161,7 @@
                   VerticalAlignment="Stretch"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
-                  SelectedItem="{Binding ViewBindToModel.SelectedProduct}"
+                  SelectedItem="{Binding ViewBindToProductModel.SelectedProduct}"
                   EnableRowVirtualization="False"
                   CanUserSortColumns="True"
                   CanUserResizeRows="False"
@@ -202,12 +198,12 @@
 
             <Button Grid.Column="1" Content="Edit Product" 
                     Command="{Binding EditProductCommand}"
-                    CommandParameter="{Binding ViewBindToModel.SelectedProduct}"
+                    CommandParameter="{Binding ViewBindToProductModel.SelectedProduct}"
                     Width="120" Height="30" Margin="5"/>
 
             <Button Grid.Column="2" Content="Delete Product" 
                     Command="{Binding DeleteProductCommand}"
-                    CommandParameter="{Binding ViewBindToModel.SelectedProduct}"
+                    CommandParameter="{Binding ViewBindToProductModel.SelectedProduct}"
                     Width="120" Height="30" Margin="5"/>
         </Grid>
     </Grid>
