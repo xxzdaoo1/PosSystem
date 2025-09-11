@@ -1,5 +1,4 @@
-﻿using PosSystem.App.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,20 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace PosSystem.App.Views
 {
     /// <summary>
-    /// Interaction logic for Inventory.xaml
+    /// Interaction logic for ReceiveStockWindowView.xaml
     /// </summary>
-    public partial class InventoryView : UserControl
+    public partial class ReceiveStockWindowView : Window
     {
-        public InventoryView()
+        public ReceiveStockWindowView()
         {
             InitializeComponent();
-            DataContext = new InventoryViewModel(null);
         }
     }
 }

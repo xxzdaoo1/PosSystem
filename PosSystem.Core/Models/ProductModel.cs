@@ -41,5 +41,8 @@ namespace PosSystem.Core.Models
                 return "In Stock";
             }
         }
+
+        [NotMapped]
+        public string NameWithStock => $"{Name} (Current: {StockQuantity})";
     }
 }

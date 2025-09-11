@@ -3,6 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PosSystem.App.Views"
+             xmlns:viewmodels="clr-namespace:PosSystem.App.ViewModels" 
+             d:DataContext="{d:DesignInstance Type=viewmodels:InventoryViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
 
@@ -20,6 +23,12 @@
 
         <!-- Quick Stats -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
+            <Border Background="Gold" Margin="5" Padding="10" CornerRadius="5">
+                <StackPanel>
+                    <TextBlock Text="Total Products" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding TotalProducts}" FontSize="16"/>
+                </StackPanel>
+            </Border>
             <Border Background="LightGreen" Margin="5" Padding="10" CornerRadius="5">
                 <StackPanel>
                     <TextBlock Text="In Stock" FontWeight="Bold"/>
@@ -52,28 +61,77 @@
                 <TabControl>
                     <!-- All Inventory Tab -->
                     <TabItem Header="All Inventory">
-                        <DataGrid ItemsSource="{Binding FilteredInventoryItems}" AutoGenerateColumns="False" Margin="5">
+                        <DataGrid ItemsSource="{Binding ViewBindToInventoryModel.FilteredProducts}" 
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserReorderColumns="False"
+                              IsReadOnly="True"
+                              RowHeaderWidth="0"
+                              GridLinesVisibility="Horizontal"
+                              AlternatingRowBackground="LightGray"
+                              AlternationCount="2"
+                              Margin="5"
+                              BorderThickness="1"
+                              BorderBrush="Gray">
+
+                            <!-- Column Headers -->
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#f0f0f0"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Padding" Value="5,3"/>
+                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Product" Binding="{Binding Name}" Width="*"/>
-                                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="100"/>
-                                <DataGridTextColumn Header="Current Stock" Binding="{Binding StockQuantity}" Width="80"/>
-                                <DataGridTextColumn Header="Status" Binding="{Binding StockStatus}" Width="100"/>
-                                <DataGridTextColumn Header="Last Updated" Binding="{Binding LastStockUpdate, StringFormat=yyyy-MM-dd}" Width="100"/>
+                                <DataGridTextColumn Header="Barcode" Binding="{Binding Barcode}" Width="120"/>
+                                <DataGridTextColumn Header="Current Stock" Binding="{Binding StockQuantity}" Width="100"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding StockStatus}" Width="120"/>
+                                <DataGridTextColumn Header="Last Updated" Binding="{Binding LastStockUpdate, StringFormat=yyyy-MM-dd}" Width="120"/>
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>
 
                     <!-- Stock History Tab -->
                     <TabItem Header="Stock History">
-                        <DataGrid ItemsSource="{Binding StockHistory}" AutoGenerateColumns="False" Margin="5">
+                        <DataGrid ItemsSource="{Binding StockHistory}" 
+                              AutoGenerateColumns="False"
+                              HeadersVisibility="Column"
+                              CanUserAddRows="False"
+                              CanUserDeleteRows="False"
+                              CanUserReorderColumns="False"
+                              IsReadOnly="True"
+                              RowHeaderWidth="0"
+                              GridLinesVisibility="Horizontal"
+                              AlternatingRowBackground="LightGray"
+                              AlternationCount="2"
+                              Margin="5"
+                              BorderThickness="1"
+                              BorderBrush="Gray">
+                            <DataGrid.ColumnHeaderStyle>
+                                <Style TargetType="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#f0f0f0"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Padding" Value="5,3"/>
+                                    <Setter Property="BorderBrush" Value="Gray"/>
+                                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                                </Style>
+                            </DataGrid.ColumnHeaderStyle>
+
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Date" Binding="{Binding AdjustmentDate, StringFormat=yyyy-MM-dd}" Width="100"/>
+                                <DataGridTextColumn Header="Date" Binding="{Binding AdjustmentDate, StringFormat=yyyy-MM-dd}" Width="120"/>
                                 <DataGridTextColumn Header="Product" Binding="{Binding Product.Name}" Width="*"/>
-                                <DataGridTextColumn Header="Type" Binding="{Binding AdjustmentType}" Width="80"/>
-                                <DataGridTextColumn Header="Qty Change" Binding="{Binding QuantityChange}" Width="80"/>
-                                <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier}" Width="120"/>
+                                <DataGridTextColumn Header="Type" Binding="{Binding AdjustmentType}" Width="100"/>
+                                <DataGridTextColumn Header="Qty Change" Binding="{Binding QuantityChange}" Width="100"/>
+                                <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier}" Width="150"/>
                             </DataGrid.Columns>
                         </DataGrid>
+
                     </TabItem>
                 </TabControl>
             </DockPanel>
@@ -81,7 +139,7 @@
 
         <!-- Action Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10">
-            <Button Content="Receive Stock" Command="{Binding ReceiveStockCommand}" 
+            <Button Content="Receive Stock" Command="{Binding OpenReceiveStockWindowCommand}" 
                     Width="120" Height="35" Margin="5"/>
             <Button Content="Adjust Stock" Command="{Binding AdjustStockCommand}" 
                     Width="120" Height="35" Margin="5"/>

@@ -1,19 +1,16 @@
-﻿using System;
+﻿using PosSystem.Core.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using PosSystem.Core.Models;
 
 namespace PosSystem.Data.Interfaces
 {
     public interface IProductRepository
     {
         Task<IEnumerable<ProductModel>> GetAllAsync();
+        Task<IEnumerable<ProductModel>> SearchAsync(string searchText);
         Task<ProductModel> GetByIdAsync(int id);
         Task AddAsync(ProductModel product);
         Task UpdateAsync(ProductModel product);
-        Task DeleteAsync (int id);
-        Task<bool> ExistsAsync(int id);
+        Task DeleteAsync(ProductModel product);
     }
 }

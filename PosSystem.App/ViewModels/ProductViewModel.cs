@@ -24,7 +24,7 @@ namespace PosSystem.App.ViewModels
         public ICommand EditProductCommand { get; set; }
         public ICommand DeleteProductCommand { get; set; }
         public ICommand RefreshProductCommand { get; set; }
-        public ICommand SearchProductCommand { get; set; }
+        //public ICommand SearchProductCommand { get; set; }
 
         private string _searchText;
         public string SearchText
@@ -41,8 +41,9 @@ namespace PosSystem.App.ViewModels
         public ProductViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
         {
             ViewBindToProductModel = new ViewBindToProductModel();
+
             AddProductCommand = new RelayCommand(OpenAddProductWindow);
-            EditProductCommand = new RelayCommand(EditProduct);
+            EditProductCommand = new RelayCommand(EditProductWindow);
             DeleteProductCommand = new RelayCommand(DeleteProduct);
             RefreshProductCommand = new RelayCommand(RefreshProducts);
         }
@@ -64,7 +65,7 @@ namespace PosSystem.App.ViewModels
             addProductWindow.DataContext = viewModel;
             addProductWindow.ShowDialog();
         }
-        private void EditProduct(object parameter)
+        private void EditProductWindow(object parameter)
         {
             ProductModel productToEdit = parameter as ProductModel ?? ViewBindToProductModel.SelectedProduct;
             if (productToEdit != null)
@@ -150,11 +151,11 @@ namespace PosSystem.App.ViewModels
                 NotifyPropertyChanged();
             }
         }
-
         public ViewBindToProductModel()
         {
             LoadProductsFromDatabase();
         }
+
         public void LoadProductsFromDatabase()
         {
             using (var context = new AppDBContext())
@@ -164,7 +165,6 @@ namespace PosSystem.App.ViewModels
                 FilteredProducts = new ObservableCollection<ProductModel>(AllProducts);
             }
         }
-
         public void DeleteProduct(ProductModel product)
         {
             if (product == null) return;

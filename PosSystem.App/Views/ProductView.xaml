@@ -152,7 +152,7 @@
         </StackPanel>
         
         <!-- DataGrid -->
-        <DataGrid Grid.Row="2" ItemsSource="{Binding ViewBindToProductModel.LimitedProducts}"
+        <DataGrid Grid.Row="2" ItemsSource="{Binding ViewBindToProductModel.AllProducts}"
                   HeadersVisibility="Column"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"

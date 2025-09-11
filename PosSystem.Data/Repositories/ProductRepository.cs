@@ -22,6 +22,17 @@ namespace PosSystem.Data.Repositories
             return await _context.Products.ToListAsync();
         }
 
+        public async Task<IEnumerable<ProductModel>> SearchAsync(string searchText)
+        {
+            if (string.IsNullOrWhiteSpace(searchText))
+                return await GetAllAsync();
+
+            return await _context.Products
+                .Where(p => (p.Name != null && EF.Functions.Like(p.Name, $"%{searchText}%")) ||
+                            (p.Barcode != null && EF.Functions.Like(p.Barcode, $"%{searchText}%")))
+                .ToListAsync();
+        }
+
         public async Task<ProductModel> GetByIdAsync(int id)
         {
             return await _context.Products.FindAsync(id);
@@ -39,19 +50,10 @@ namespace PosSystem.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(ProductModel product)
         {
-            var product = await GetByIdAsync(id);
-            if (product != null)
-            {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        public async Task<bool> ExistsAsync(int id)
-        {
-            return await _context.Products.AnyAsync(p => p.ProductID == id);
+            _context.Products.Remove(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

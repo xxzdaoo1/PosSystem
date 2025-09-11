@@ -1,5 +1,4 @@
-﻿using PosSystem.App.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,14 +16,13 @@ using System.Windows.Shapes;
 namespace PosSystem.App.Views
 {
     /// <summary>
-    /// Interaction logic for Inventory.xaml
+    /// Interaction logic for ReportView.xaml
     /// </summary>
-    public partial class InventoryView : UserControl
+    public partial class ReportView : UserControl
     {
-        public InventoryView()
+        public ReportView()
         {
             InitializeComponent();
-            DataContext = new InventoryViewModel(null);
         }
     }
 }

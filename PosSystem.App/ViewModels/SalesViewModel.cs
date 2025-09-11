@@ -38,6 +38,7 @@ namespace PosSystem.App.ViewModels
         public SalesViewModel(IChangeViewModel viewModelChanger) : base(viewModelChanger)
         {   
             ViewBindToSalesModel = new viewBindToSalesModel();
+
             AddToCartCommand = new RelayCommand(AddToCart);
             RemoveFromCartCommand = new RelayCommand(RemoveFromCart);
             ProcessPaymentCommand = new RelayCommand(ProcessPayment);
@@ -133,6 +134,7 @@ namespace PosSystem.App.ViewModels
             get => _totalAmount;
             set { _totalAmount = value; NotifyPropertyChanged(); }
         }
+
         #endregion
         public viewBindToSalesModel()
         {
